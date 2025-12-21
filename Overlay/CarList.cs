@@ -169,7 +169,7 @@ namespace DvMod.HeadsUpDisplay
             {
                 float carStress = car.GetComponent<TrainStress>().derailBuildUp;
                 float? couplerStress = GetCouplerStress(cars, index);
-                Job? job = SingletonBehaviour<JobsManager>.Instance.GetJobOfCar(car);
+                Job? job = SingletonBehaviour<JobsManager>.Instance.GetJobOfCar(car.logicCar);
                 Track? nextDestination = GetNextDestinationTrack(job, car.logicCar);
                 BrakeSystem brakeSystem = car.brakeSystem;
                 Pressure pipePressure = new Pressure(brakeSystem.brakePipePressure, QuantitiesNet.Units.Bar);

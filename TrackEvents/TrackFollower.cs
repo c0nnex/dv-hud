@@ -30,7 +30,7 @@ namespace DvMod.HeadsUpDisplay
             double distanceFromStart = 0f;
             for (int i = 0; i < MAX_ITERATIONS; i++)
             {
-                yield return new TrackChangeEvent(distanceFromStart, track.logicTrack.ID);
+                yield return new TrackChangeEvent(distanceFromStart, track.LogicTrack().ID);
                 bool travelDirection = distance > 0;
 
                 var trackEvents = TrackIndexer
@@ -57,7 +57,7 @@ namespace DvMod.HeadsUpDisplay
                 }
                 else
                 {
-                    double trackSpan = track.GetPointSet().span;
+                    double trackSpan = track.GetKinkedPointSet().span;
                     if (newSpan >= trackSpan)
                     {
                         nextBranch = track.GetOutBranch();
@@ -82,7 +82,7 @@ namespace DvMod.HeadsUpDisplay
                     yield return new JunctionEvent(distanceFromStart, true, nextJunction);
 
                 track = nextBranch.track;
-                startSpan = nextBranch.first ? 0.0 : nextBranch.track.GetPointSet().span;
+                startSpan = nextBranch.first ? 0.0 : nextBranch.track.GetKinkedPointSet().span;
             }
         }
 
@@ -122,7 +122,7 @@ namespace DvMod.HeadsUpDisplay
             {
                 var branch = queue.Dequeue();
                 // Main.DebugLog($"Examining {branch}, track={branch.track}, logicTrack={branch.track.logicTrack}, ID={branch.track.logicTrack.ID}");
-                trackID = branch.track.logicTrack.ID;
+                trackID = branch.track.LogicTrack().ID;
                 if (!trackID.IsGeneric())
                 {
                     descriptions[startBranch] = trackID;

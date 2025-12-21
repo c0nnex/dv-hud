@@ -41,12 +41,12 @@ namespace DvMod.HeadsUpDisplay
             var bogie = PlayerManager.Car.Bogies[1];
             var track = bogie.track;
             if (track == null)
-                return;
+                return; 
             var startSpan = bogie.traveller.Span;
             var locoDirection = PlayerManager.LastLoco == null || PlayerManager.LastLoco.GetComponent<SimController>()?.controlsOverrider.Reverser.Value >= 0.5f;
             var direction = !locoDirection ^ (bogie.TrackDirectionSign > 0);
             var currentGrade = TrackIndexer.Grade(bogie.point1) * (direction ? 1 : -1);
-
+            
             var events = TrackFollower.FollowTrack(
                 track,
                 startSpan,
@@ -102,13 +102,13 @@ namespace DvMod.HeadsUpDisplay
             {
                 return car.Bogies
                     .Where(bogie => bogie.track == branch.track)
-                    .Min(bogie => branch.first ? bogie.traveller.Span : branch.track.logicTrack.length - bogie.traveller.Span);
+                    .Min(bogie => branch.first ? bogie.traveller.Span : branch.track.LogicTrack().length - bogie.traveller.Span);
             }
 
             static (double, Car)? ClosestCar(Junction.Branch branch)
             {
-                var logicTrack = branch.track.logicTrack;
-                var logicCarToTrainCar = SingletonBehaviour<IdGenerator>.Instance.logicCarToTrainCar;
+                var logicTrack = branch.track.LogicTrack();
+                var logicCarToTrainCar = SingletonBehaviour<TrainCarRegistry>.Instance.logicCarToTrainCar;
                 var allCars = logicTrack.GetCarsFullyOnTrack().Concat(logicTrack.GetCarsPartiallyOnTrack());
                 if (!allCars.Any())
                     return null;

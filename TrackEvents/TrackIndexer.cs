@@ -88,7 +88,7 @@ namespace DvMod.HeadsUpDisplay
 
         private static IEnumerable<TrackEvent> GenerateTrackEvents(RailTrack track)
         {
-            var pointSet = track.GetPointSet();
+            var pointSet = track.GetKinkedPointSet();
             EquiPointSet simplified = EquiPointSet.ResampleEquidistant(
                 pointSet,
                 Mathf.Min(SIMPLIFIED_RESOLUTION, (float)pointSet.span / 3));
