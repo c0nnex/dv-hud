@@ -4,6 +4,28 @@ using System.Linq;
 
 namespace DvMod.HeadsUpDisplay
 {
+    public class StringQueryDataProvider : DataProvider<string>
+    {
+        private readonly Func<TrainCar, string?> provider;
+
+        public StringQueryDataProvider(string label, Func<TrainCar, string?> provider, IComparable? order = null, bool hidden = false)
+        : base(label, order, hidden)
+        {
+            this.provider = provider;            
+        }
+        public override bool TryGetFormatted(TrainCar car, out string s)
+        {
+            s = provider(car)!;
+            return true;
+        }
+
+        public override bool TryGetValue(TrainCar car, out string v)
+        {
+            v = provider(car)!;
+            return true;
+        }
+    }
+
     public class FloatQueryDataProvider : DataProvider<float>
     {
         private readonly Func<TrainCar, float?> provider;

@@ -186,7 +186,7 @@ namespace DvMod.HeadsUpDisplay
             foreach (var (label, value) in labelsAndValues)
             {
                 if (value != null)
-                    GUILayout.Label(value, Styles.noWrap);
+                    GUILayout.Label(value, Styles.richText);
             }
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();

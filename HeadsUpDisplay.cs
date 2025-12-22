@@ -1,3 +1,4 @@
+using CommandTerminal;
 using HarmonyLib;
 using UnityEngine;
 using UnityModManagerNet;
@@ -74,6 +75,7 @@ namespace DvMod.HeadsUpDisplay
         {
             behaviourRoot = new GameObject();
             behaviourRoot.AddComponent<Overlay>();
+            Console.RegisterCommands();
         }
 
         private static bool OnUnload(UnityModManager.ModEntry modEntry)

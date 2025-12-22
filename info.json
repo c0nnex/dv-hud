@@ -1,11 +1,12 @@
 {
-  "Id": "HeadsUpDisplay",
-  "DisplayName": "Heads-up Display",
-  "Author": "Zeibach",
-  "Version": "1.1.0",
-  "LoadAfter": ["DVCustomCarLoader"],
+  "Id": "cxHeadsUpDisplay",
+  "DisplayName": "Heads-up Display XL",
+  "Author": "c0nnex",
+  "Version": "2.0.0",
+  "LoadAfter": [ "DVCustomCarLoader" ],
   "AssemblyName": "HeadsUpDisplay.dll",
   "EntryMethod": "DvMod.HeadsUpDisplay.Main.Load",
-  "HomePage": "https://www.nexusmods.com/derailvalley/mods/206",
-  "Repository": "https://raw.githubusercontent.com/mspielberg/dv-hud/master/resources/repository.json"
+  "MultiplayerCompatibility": "Client",
+  "HomePage": "https://github.com/c0nnex/dv-hud",
+  "Repository": "https://raw.githubusercontent.com/c0nnex/dv-hud/c0nnex/resources/repository.json"
 }
