@@ -13,10 +13,42 @@ namespace DvMod.HeadsUpDisplay
                 ? car.frontCoupler.coupledTo.train.indexInTrainset < car.indexInTrainset
                 : car.indexInTrainset == 0;
 
-        public static TrainCar CarAtEnd(TrainCar loco, bool atFront) => atFront ? FirstCar(loco) : LastCar(loco);
+        public static TrainCar CarAtEnd(this TrainCar loco, bool atFront) => atFront ? FirstCar(loco) : LastCar(loco);
 
-        public static TrainCar FirstCar(TrainCar loco) => IsFacingFrontOfTrainset(loco) ? loco.trainset.firstCar : loco.trainset.lastCar;
-        public static TrainCar LastCar(TrainCar loco) => IsFacingFrontOfTrainset(loco) ? loco.trainset.lastCar : loco.trainset.firstCar;
+        public static TrainCar FirstCar(this TrainCar loco) => IsFacingFrontOfTrainset(loco) ? loco.trainset.firstCar : loco.trainset.lastCar;
+        public static TrainCar LastCar(this TrainCar loco) => IsFacingFrontOfTrainset(loco) ? loco.trainset.lastCar : loco.trainset.firstCar;
+        public static TrainCar? GetNearestCarOnTrack(this Trainset trainset, Track track, Vector3 position)
+        {
+            if (trainset.cars.Count == 1)
+            {
+                if (trainset.firstCar.logicCar?.CurrentTrack == track)
+                    return trainset.firstCar;
+                return null;
+            }            
+            var curDist = float.MaxValue;
+            if (trainset.firstCar.logicCar?.CurrentTrack == track)
+                curDist = Vector3.Distance(position, trainset.firstCar.transform.position);
+            if (trainset.lastCar.logicCar?.CurrentTrack == track)
+            {
+                var thisDist = Vector3.Distance(position, trainset.lastCar.transform.position);
+                if (thisDist < curDist)
+                    return trainset.lastCar;
+            }
+            if (curDist != float.MaxValue)
+                return trainset.firstCar;
+            return null;
+        }
+
+        public static Coupler? GetFreeCoupler(this TrainCar trainCar,Vector3 refPosition)
+        {
+            if (trainCar.frontCoupler.IsCoupled()) return trainCar.rearCoupler;
+            if (trainCar.rearCoupler.IsCoupled()) return trainCar.frontCoupler;
+            var df = Vector3.Distance(refPosition,trainCar.frontCoupler.transform.position);
+            var dr = Vector3.Distance(refPosition, trainCar.rearCoupler.transform.position);
+            if (df <= dr)
+                return trainCar.frontCoupler;
+            return trainCar.rearCoupler;
+        }
 
         public static bool IsOnTrack(this Trainset trainset, Track tragetTrack) => trainset.cars.Any(c => c.logicCar?.CurrentTrack == tragetTrack);
         public static float OverallLength(this Trainset trainset) => trainset.cars.Sum(c => c.logicCar.length);
@@ -26,37 +58,16 @@ namespace DvMod.HeadsUpDisplay
         {
             foreach (var set in allSets)
             {
-                if (direction) // driving forward , so we check the RearCoupler of trainset
-                {
-                    Coupler coupler = set.GetEndmost(false);
-                    if (coupler != null)
-                    {
-                        var car = coupler?.train;
-                        if (car?.logicCar.CurrentTrack == playerTrack)
-                        {                           
-                            var span = car?.Bogies[1].traveller.Span ?? 0;
-                            var distSpan = span - playerSpan;
-                            
-                            if (distSpan >= 0) // is front of us
-                                yield return new TrainsetData(car!.ID, span, distSpan < 50f ? Vector3.Distance(playerPosition, coupler!.transform.position) : distSpan, car.isStationary);
-                        }
-                    }
-                }
-                else // Driving backwards , using frontcoupler of trainset
-                {
-                    Coupler coupler = set.GetEndmost(true);
-                    if (coupler != null)
-                    {
-                        var car = coupler?.train;
-                        if (car?.logicCar.CurrentTrack == playerTrack)
-                        {
-                            var span = car?.Bogies[1].traveller.Span ?? 0;
-                            var distSpan = playerSpan - span;
-                            if (distSpan >= 0) // is behind of us
-                                yield return new TrainsetData(car!.ID, span, distSpan < 50f ? Vector3.Distance(coupler!.transform.position, playerPosition) : distSpan, car.isStationary);
-                        }
-                    }
-                }                
+                var car = set.GetNearestCarOnTrack(playerTrack,playerPosition);
+                if (car == null) continue;
+                var span = car!.Bogies[1].traveller.Span;
+                var distSpan = span - playerSpan;
+                if (direction && distSpan < 0)
+                    continue;
+                if (!direction && distSpan > 0)
+                    continue;
+                Main.DebugLog($"Checking set {set.id} cars {set.cars.Count} first {set.firstCar.ID} last {set.lastCar.ID} selected {car!.ID} Dist {distSpan}");
+                yield return new TrainsetData(car!.ID, span, distSpan < 50f ? Vector3.Distance(playerPosition, car.GetFreeCoupler(playerPosition)?.transform.position??Vector3.zero) : distSpan, car.isStationary);                
             }
         }
     }
