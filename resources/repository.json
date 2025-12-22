@@ -1,6 +1,15 @@
 {
   "Releases":
   [
-      {"Id": "cxHeadsUpDisplay", "Version": "2.0.0", "DownloadUrl": "https://github.com/c0nnex/dv-hud/releases/download/v2.0.0/cxHeadsUpDisplay_2.0.0.zip"}    
+    {
+      "Id": "cxHeadsUpDisplay",
+      "Version": "2.0.0",
+      "DownloadUrl": "https://github.com/c0nnex/dv-hud/releases/download/v2.0.0/cxHeadsUpDisplay_2.0.0.zip"
+    },
+    {
+      "Id": "cxHeadsUpDisplay",
+      "Version": "2.0.1",
+      "DownloadUrl": "https://github.com/c0nnex/dv-hud/releases/download/v2.0.1/cxHeadsUpDisplay_2.0.1.zip"
+    }
   ]
 }

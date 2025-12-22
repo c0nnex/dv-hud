@@ -31,19 +31,20 @@ namespace DvMod.HeadsUpDisplay
                    var track = bogie.track;
                    if (track == null)
                        return "No Track";
-
+                   
                    var locoDirection = PlayerManager.LastLoco == null || PlayerManager.LastLoco.GetComponent<SimController>()?.controlsOverrider.Reverser.Value >= 0.5f;
                    var direction = !locoDirection ^ (bogie.TrackDirectionSign > 0);
                    var ignoreSet = car.trainset?.id ?? int.MinValue;
                    var targetTrack = car.logicCar?.CurrentTrack;
                    if (targetTrack == null) return "No LogicTrack";
+                   Debug.Log($"car {car.ID} set {ignoreSet} dir {direction} track {targetTrack.ID}");
                    var playerCoupler = car.trainset?.GetEndmost(direction);
                    if (playerCoupler == null)
                        return "No Player Coupler";
                    Vector3 playerPosition = playerCoupler.transform.position; // Loco or Last Car depending on direction;
                    var startSpan = playerCoupler.train.Bogies[1].traveller.Span;
 
-                   var allSet = Trainset.allSets.FilterByTrack(targetTrack, direction, startSpan, playerPosition).OrderBy(t => t.Distance).FirstOrDefault();
+                   var allSet = Trainset.allSets.Where(t=>t.id != ignoreSet).FilterByTrack(targetTrack, direction, startSpan, playerPosition).OrderBy(t => t.Distance).FirstOrDefault();
                    if (allSet == null)
                        return "Nothing near";
                    if (allSet.Distance > trackInfoSettings.maxEventSpan)
