@@ -16,7 +16,7 @@ namespace DvMod.HeadsUpDisplay
     public static class Console
     {
 
-#if DEBUG
+#if DEBUG1
         [RegisterCommand("cx.ListTrainSets", Help = "", MinArgCount = 0, MaxArgCount = 0)]
         public static void ListTrainSets(CommandArg[] args)
         {

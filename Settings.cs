@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using QuantitiesNet;
@@ -261,6 +262,22 @@ namespace DvMod.HeadsUpDisplay
             [Draw("Brake status", VisibleOn = "showCarList|true")] public bool showCarBrakeStatus = true;
         }
 
+        public class ProximitySettings
+        {
+            [Draw("Enable")] public bool enabled = true;
+            [Draw("Max distance", VisibleOn = "enabled|true")] public double maxProximitySpan = 5000;
+            [Draw("Precicse distance", VisibleOn = "enabled|true")] public double preciseSpan = 20;
+            [Draw("Debug", VisibleOn = "enabled|true", Type = DrawType.CustomGUI)]
+            [System.Xml.Serialization.XmlIgnore]
+            public Action DrawDebugProxity = () =>
+            {
+                if (GUILayout.Button("Debug Proximity", GUILayout.ExpandWidth(false)))
+                {
+                    Proximity.GetProximity(PlayerManager.Car,true);
+                }
+            };
+            
+        }
         public static Vector2 defaultPosition = new Vector2(10, 10);
 
         public DrivingInfoSettings drivingInfoSettings = new DrivingInfoSettings();
@@ -271,10 +288,13 @@ namespace DvMod.HeadsUpDisplay
         [Draw("Train info", Collapsible = true, Box = true)]
         public TrainInfoSettings trainInfoSettings = new TrainInfoSettings();
 
+        [Draw("Proximity Settings", Collapsible = true, Box = true)]
+        public ProximitySettings proximitySettings = new ProximitySettings();
+
         [Draw("Enable Job list")] public bool drawJobList;
         [Draw("Enable logging")] public bool enableLogging;
         [Draw("Lock position")] public bool lockPosition;
-
+        
         public readonly string? version = Main.mod?.Info.Version;
 
         public Vector2 hudPosition;

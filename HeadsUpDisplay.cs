@@ -88,10 +88,15 @@ namespace DvMod.HeadsUpDisplay
             return true;
         }
 
-        public static void DebugLog(string message)
+        public static void DebugLog(string message, bool force = false)
         {
-            if (settings.enableLogging && mod != null)
+            if ((settings.enableLogging || force) && mod != null)
                 mod.Logger.Log(message);
+        }
+        public static void DebugLog(System.Func<string> messageAct, bool force = false)
+        {
+            if ((settings.enableLogging || force) && mod != null)
+                mod.Logger.Log(messageAct());
         }
     }
 }

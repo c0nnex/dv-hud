@@ -94,4 +94,8 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy $(TargetPath) &quot;Q:\SteamLibrary\steamapps\common\Derail Valley\Mods\cxHeadsUpDisplay\&quot;" />
+  </Target>
 </Project>
