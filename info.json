@@ -2,7 +2,7 @@
   "Id": "cxHeadsUpDisplay",
   "DisplayName": "Heads-up Display XL",
   "Author": "c0nnex",
-  "Version": "2.0.1",
+  "Version": "2.0.2",
   "LoadAfter": [ "DVCustomCarLoader" ],
   "AssemblyName": "HeadsUpDisplay.dll",
   "EntryMethod": "DvMod.HeadsUpDisplay.Main.Load",
